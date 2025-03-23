@@ -9,6 +9,7 @@ org\example\tictactoe\statistic\UserModelUi.class
 org\example\tictactoe\menu\MyMenuController.class
 org\example\tictactoe\UserModelParser.class
 org\example\tictactoe\auth\LoginController.class
+org\example\tictactoe\UserModelParser$1.class
 org\server\tictactoe\models\GameField.class
 org\server\tictactoe\models\Response.class
 org\server\tictactoe\TicTacToe.class

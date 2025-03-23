@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.tictactoe.ClientApplication;
@@ -22,6 +23,9 @@ public class LoginController implements Initializable {
     @FXML
     private TextField usernameField;
 
+    @FXML
+    private PasswordField passwordField;
+
     private DataOutputStream outputStream;
     private DataInputStream inputStream;
 
@@ -32,27 +36,61 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // По желанию: инициализация
+        // Необязательно
     }
 
     @FXML
-    private void login() {
+    private void onLogin() {
+        String nickname = usernameField.getText().trim();
+        String password = passwordField.getText();
+
+        if (nickname.isEmpty() || password.isEmpty()) {
+            showAlert("Ошибка", "Введите логин и пароль.");
+            return;
+        }
+
         try {
-            String nickname = usernameField.getText();
-            outputStream.writeUTF("LOGIN " + nickname);
+            outputStream.writeUTF("LOGIN " + nickname + " " + password);
             outputStream.flush();
 
             String response = inputStream.readUTF();
-
             if ("LOGIN_SUCCESS".equals(response)) {
                 ClientApplication.login = nickname;
                 openMenu();
             } else {
-                String errorMessage = inputStream.readUTF(); // читаем вторую строку с описанием
-                showAlert("Ошибка входа", errorMessage);
+                String message = inputStream.readUTF();
+                showAlert("Ошибка входа", message);
             }
-        } catch (Exception e) {
-            showAlert("Ошибка", "Ошибка подключения к серверу.");
+        } catch (IOException e) {
+            showAlert("Ошибка", "Ошибка соединения с сервером.");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void onRegister() {
+        String nickname = usernameField.getText().trim();
+        String password = passwordField.getText();
+
+        if (nickname.isEmpty() || password.isEmpty()) {
+            showAlert("Ошибка", "Введите логин и пароль.");
+            return;
+        }
+
+        try {
+            outputStream.writeUTF("REGISTER " + nickname + " " + password);
+            outputStream.flush();
+
+            String response = inputStream.readUTF();
+            if ("REGISTER_SUCCESS".equals(response)) {
+                ClientApplication.login = nickname;
+                openMenu();
+            } else {
+                String message = inputStream.readUTF();
+                showAlert("Ошибка регистрации", message);
+            }
+        } catch (IOException e) {
+            showAlert("Ошибка", "Ошибка соединения с сервером.");
             e.printStackTrace();
         }
     }
@@ -61,14 +99,11 @@ public class LoginController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/tictactoe/menu-choice.fxml"));
         Parent root = loader.load();
 
-        // Получаем текущий Stage
         Stage stage = (Stage) usernameField.getScene().getWindow();
 
-        // Передаем stage в контроллер меню
         MyMenuController controller = loader.getController();
         controller.setMainStage(stage);
 
-        // Меняем сцену
         stage.setScene(new Scene(root));
         stage.setTitle("Главное меню");
     }

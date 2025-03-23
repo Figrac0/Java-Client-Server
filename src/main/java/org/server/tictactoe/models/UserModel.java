@@ -16,7 +16,7 @@ public record UserModel(
                                 ", name=" + name +
                                 ", playedGames=" + playedGames +
                                 ", wonGames=" + wonGames +
-                                ", ratio=" + String.format(java.util.Locale.US, "%.5f", ratio) +
+                                ", ratio=" + ratio +
                                 ")";
         }
 }

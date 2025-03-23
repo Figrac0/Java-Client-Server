@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.tictactoe.auth.LoginController">
+    <TextField fx:id="usernameField" promptText="Логин"/>
+    <PasswordField fx:id="passwordField" promptText="Пароль"/>
+    <HBox spacing="10">
+        <Button text="Войти" onAction="#onLogin"/>
+        <Button text="Регистрация" onAction="#onRegister"/>
+    </HBox>
+</VBox>

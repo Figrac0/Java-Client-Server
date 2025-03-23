@@ -7,7 +7,11 @@ import java.io.*;
 import java.net.Socket;
 import java.util.List;
 
+import com.google.gson.Gson;
+
 public class TicTacToeHandler implements Runnable {
+
+    private final Gson gson = new Gson();
 
     private final Socket clientSocket;
     private final DataInputStream input;
@@ -34,6 +38,7 @@ public class TicTacToeHandler implements Runnable {
                     case "ADD_VICTORY" -> handleAddVictory(parts);
                     case "ADD_DEFEAT" -> handleAddDefeat(parts);
                     case "GET_RATING" -> handleGetRating(parts);
+                    case "REGISTER" -> handleRegister(parts);
                     default -> output.writeUTF("UNKNOWN_COMMAND");
                 }
             }
@@ -49,16 +54,31 @@ public class TicTacToeHandler implements Runnable {
     }
 
     private void handleLogin(String[] parts) throws IOException {
-        if (parts.length != 2) {
+        if (parts.length != 3) {
             output.writeUTF("INVALID_ARGUMENTS");
             return;
         }
         String username = parts[1];
-        Response<Boolean> response = db.login(username);
+        String password = parts[2];
+
+        Response<Boolean> response = db.login(username, password);
         output.writeUTF(response.getData() ? "LOGIN_SUCCESS" : "LOGIN_FAILURE");
-        if (!response.getData()) {
+        if (!response.getData())
             output.writeUTF(response.getDescription());
+    }
+
+    private void handleRegister(String[] parts) throws IOException {
+        if (parts.length != 3) {
+            output.writeUTF("INVALID_ARGUMENTS");
+            return;
         }
+        String username = parts[1];
+        String password = parts[2];
+
+        Response<Boolean> response = db.register(username, password);
+        output.writeUTF(response.getData() ? "REGISTER_SUCCESS" : "REGISTER_FAILURE");
+        if (!response.getData())
+            output.writeUTF(response.getDescription());
     }
 
     private void handleAddVictory(String[] parts) throws IOException {
@@ -88,6 +108,8 @@ public class TicTacToeHandler implements Runnable {
         }
         String username = parts[1];
         Response<List<UserModel>> response = db.getRatingWithCurrentUser(username);
-        output.writeUTF(response.getData().toString());
+        String json = gson.toJson(response.getData()); // сериализуем список в JSON
+        output.writeUTF(json);
     }
+
 }

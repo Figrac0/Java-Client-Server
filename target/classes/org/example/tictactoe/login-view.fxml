@@ -3,7 +3,10 @@
 <?import javafx.scene.layout.*?>
 
 <VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.tictactoe.auth.LoginController">
-    <Label text="Введите имя пользователя"/>
     <TextField fx:id="usernameField" promptText="Логин"/>
-    <Button text="Войти" onAction="#login"/>
+    <PasswordField fx:id="passwordField" promptText="Пароль"/>
+    <HBox spacing="10">
+        <Button text="Войти" onAction="#onLogin"/>
+        <Button text="Регистрация" onAction="#onRegister"/>
+    </HBox>
 </VBox>

@@ -36,11 +36,11 @@ public class TicTacToeDbImp implements TicTacToe {
         }
     }
 
-    public static void main(String[] args) {
-        TicTacToeDbImp db = new TicTacToeDbImp();
-        var response = db.clearAllUsersAndResetIds();
+    // public static void main(String[] args) {
+    // TicTacToeDbImp db = new TicTacToeDbImp();
+    // var response = db.clearAllUsersAndResetIds();
 
-    }
+    // }
 
     private void createTableIfNotExists() {
         try {
@@ -48,34 +48,39 @@ public class TicTacToeDbImp implements TicTacToe {
                         CREATE TABLE IF NOT EXISTS users (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             nickname TEXT UNIQUE NOT NULL,
+                            password TEXT NOT NULL,
                             played_games INTEGER DEFAULT 0,
                             won_games INTEGER DEFAULT 0
                         );
                     """);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public Response<Boolean> register(String nickname) {
+    public Response<Boolean> register(String nickname, String password) {
         try {
-            var res = stmt.executeUpdate("INSERT INTO users(nickname) VALUES('" + nickname + "');");
-            return new Response<>(res > 0, "");
+            var res = stmt.executeUpdate(
+                    "INSERT INTO users(nickname, password) VALUES('" + nickname + "', '" + password + "');");
+            return new Response<>(res > 0, "Пользователь зарегистрирован.");
         } catch (Exception e) {
             return new Response<>(false, "Пользователь уже существует.");
         }
     }
 
     @Override
-    public Response<Boolean> login(String nickname) {
+    public Response<Boolean> login(String nickname, String password) {
         try {
-            var rs = stmt.executeQuery("SELECT * FROM users WHERE nickname = '" + nickname + "'");
-            if (!rs.next()) {
-                return register(nickname); // Автоматическая регистрация
+            var rs = stmt.executeQuery(
+                    "SELECT password FROM users WHERE nickname = '" + nickname + "'");
+            if (rs.next()) {
+                boolean success = rs.getString("password").equals(password);
+                return new Response<>(success, success ? "Вход выполнен." : "Неверный пароль.");
+            } else {
+                return new Response<>(false, "Пользователь не найден.");
             }
-            rs.close();
-            return new Response<>(true, "");
         } catch (Exception e) {
             return new Response<>(false, e.getMessage());
         }

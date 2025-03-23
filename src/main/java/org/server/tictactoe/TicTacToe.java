@@ -6,9 +6,9 @@ import org.server.tictactoe.models.UserModel;
 import java.util.List;
 
 public interface TicTacToe {
-    Response<Boolean> register(String nickname);
+    Response<Boolean> register(String nickname, String password);
 
-    Response<Boolean> login(String nickname);
+    Response<Boolean> login(String nickname, String password);
 
     Response<Boolean> addVictoryForUser(String nickname);
 
