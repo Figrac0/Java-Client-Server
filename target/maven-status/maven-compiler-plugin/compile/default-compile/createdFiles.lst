@@ -1,0 +1,14 @@
+org\example\tictactoe\ClientApplication.class
+org\server\tictactoe\models\UserModel.class
+org\example\tictactoe\game\GameController.class
+org\server\tictactoe\TicTacToeDbImp.class
+org\server\tictactoe\TicTacToeHandler.class
+org\server\tictactoe\Server.class
+org\example\tictactoe\statistic\StatisticController.class
+org\example\tictactoe\statistic\UserModelUi.class
+org\example\tictactoe\menu\MyMenuController.class
+org\example\tictactoe\UserModelParser.class
+org\example\tictactoe\auth\LoginController.class
+org\server\tictactoe\models\GameField.class
+org\server\tictactoe\models\Response.class
+org\server\tictactoe\TicTacToe.class
