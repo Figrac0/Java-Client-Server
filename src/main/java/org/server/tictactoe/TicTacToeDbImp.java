@@ -50,7 +50,8 @@ public class TicTacToeDbImp implements TicTacToe {
                             nickname TEXT UNIQUE NOT NULL,
                             password TEXT NOT NULL,
                             played_games INTEGER DEFAULT 0,
-                            won_games INTEGER DEFAULT 0
+                            won_games INTEGER DEFAULT 0,
+                            rating INTEGER DEFAULT 2000
                         );
                     """);
 
@@ -63,7 +64,9 @@ public class TicTacToeDbImp implements TicTacToe {
     public Response<Boolean> register(String nickname, String password) {
         try {
             var res = stmt.executeUpdate(
-                    "INSERT INTO users(nickname, password) VALUES('" + nickname + "', '" + password + "');");
+                    "INSERT INTO users(nickname, password, rating) VALUES('" + nickname + "', '" + password
+                            + "', 2000);");
+
             return new Response<>(res > 0, "Пользователь зарегистрирован.");
         } catch (Exception e) {
             return new Response<>(false, "Пользователь уже существует.");
@@ -89,10 +92,16 @@ public class TicTacToeDbImp implements TicTacToe {
     @Override
     public Response<Boolean> addVictoryForUser(String nickname) {
         try {
-            var res = stmt.executeUpdate(
-                    "UPDATE users SET won_games = won_games + 1, played_games = played_games + 1 WHERE nickname = '"
-                            + nickname + "'");
-            return new Response<>(res > 0, "");
+            stmt.executeUpdate("""
+                        UPDATE users
+                        SET
+                            won_games = won_games + 1,
+                            played_games = played_games + 1,
+                            rating = rating + 25
+                        WHERE nickname = '%s';
+                    """.formatted(nickname));
+
+            return new Response<>(true, "");
         } catch (Exception e) {
             return new Response<>(false, e.getMessage());
         }
@@ -101,9 +110,15 @@ public class TicTacToeDbImp implements TicTacToe {
     @Override
     public Response<Boolean> addDefeatForUser(String nickname) {
         try {
-            var res = stmt.executeUpdate(
-                    "UPDATE users SET played_games = played_games + 1 WHERE nickname = '" + nickname + "'");
-            return new Response<>(res > 0, "");
+            stmt.executeUpdate("""
+                        UPDATE users
+                        SET
+                            played_games = played_games + 1,
+                            rating = MAX(0, rating - 17)
+                        WHERE nickname = '%s';
+                    """.formatted(nickname));
+
+            return new Response<>(true, "");
         } catch (Exception e) {
             return new Response<>(false, e.getMessage());
         }
@@ -113,7 +128,7 @@ public class TicTacToeDbImp implements TicTacToe {
     public Response<List<UserModel>> getRatingWithCurrentUser(String nickname) {
         try {
             var rs = stmt.executeQuery("""
-                        SELECT id, nickname, played_games, won_games
+                        SELECT id, nickname, played_games, won_games, rating
                         FROM users
                         ORDER BY id ASC;
                     """);
@@ -129,7 +144,8 @@ public class TicTacToeDbImp implements TicTacToe {
                         rs.getString("nickname"),
                         played,
                         won,
-                        ratio));
+                        ratio,
+                        rs.getInt("rating")));
             }
             rs.close();
             return new Response<>(list, "");

@@ -25,8 +25,13 @@ public class ClientApplication extends Application {
             inputStream = new DataInputStream(socket.getInputStream());
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/tictactoe/login-view.fxml"));
-            Scene scene = new Scene(loader.load());
-            stage.setTitle("Авторизация");
+            Scene scene = new Scene(loader.load(), 700, 500); // Размер окна
+
+            // Подключение CSS
+            scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
+
+            stage.setTitle("Крестики-нолики — Вход в игру");
+            stage.setResizable(false);
             stage.setScene(scene);
 
             LoginController controller = loader.getController();

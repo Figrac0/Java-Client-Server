@@ -31,6 +31,9 @@ public class StatisticController implements Initializable {
     @FXML
     private TableColumn<UserModelUi, String> ratioColumn;
 
+    @FXML
+    private TableColumn<UserModelUi, Integer> ratingColumn;
+
     private final DataOutputStream outputStream = ClientApplication.outputStream;
     private final DataInputStream inputStream = ClientApplication.inputStream;
 
@@ -40,6 +43,7 @@ public class StatisticController implements Initializable {
         playedColumn.setCellValueFactory(cell -> cell.getValue().playedGames().asObject());
         wonColumn.setCellValueFactory(cell -> cell.getValue().wonGames().asObject());
         ratioColumn.setCellValueFactory(cell -> cell.getValue().ratio());
+        ratingColumn.setCellValueFactory(cell -> cell.getValue().rating().asObject());
 
         try {
             outputStream.writeUTF("GET_RATING " + ClientApplication.login);

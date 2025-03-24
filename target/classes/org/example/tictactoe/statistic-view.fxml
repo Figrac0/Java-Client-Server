@@ -2,13 +2,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.tictactoe.statistic.StatisticController" spacing="10" alignment="CENTER">
-    <TableView fx:id="userTableView">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.tictactoe.statistic.StatisticController" spacing="10" alignment="CENTER" style="-fx-padding: 20px; -fx-background-color: #ffffff; -fx-border-radius: 15; -fx-border-color: #e0e0e0;">
+    <Label text="Статистика игроков" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333; -fx-margin-bottom: 20px;"/>
+    <TableView fx:id="userTableView" style="-fx-background-color: #f9f9f9; -fx-border-radius: 10; -fx-border-color: #cccccc;">
         <columns>
-            <TableColumn fx:id="nameColumn" text="Имя"/>
-            <TableColumn fx:id="playedColumn" text="Игр"/>
-            <TableColumn fx:id="wonColumn" text="Побед"/>
-            <TableColumn fx:id="ratioColumn" text="Процент побед"/>
+            <TableColumn fx:id="nameColumn" text="Имя" style="-fx-font-size: 14px; -fx-text-fill: #333333;"/>
+            <TableColumn fx:id="playedColumn" text="Игр" style="-fx-font-size: 14px; -fx-text-fill: #333333;"/>
+            <TableColumn fx:id="wonColumn" text="Побед" style="-fx-font-size: 14px; -fx-text-fill: #333333;"/>
+            <TableColumn fx:id="ratioColumn" text="Процент побед" style="-fx-font-size: 14px; -fx-text-fill: #333333;"/>
+            <TableColumn fx:id="ratingColumn" text="Рейтинг" style="-fx-font-size: 14px; -fx-text-fill: #333333;"/>
         </columns>
     </TableView>
 </VBox>

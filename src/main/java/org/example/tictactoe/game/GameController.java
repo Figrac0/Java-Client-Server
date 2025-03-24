@@ -27,6 +27,8 @@ public class GameController implements Initializable {
     private int fieldSize;
     private int currentTurn = 0;
 
+    private int winLength;
+
     private boolean gameOver = false;
 
     @Override
@@ -37,14 +39,35 @@ public class GameController implements Initializable {
         this.fieldSize = size;
         this.field = new int[size][size];
 
+        if (size == 3 || size == 5) {
+            winLength = 3;
+        } else if (size == 7) {
+            winLength = 4;
+        } else if (size == 10) {
+            winLength = 5;
+        } else {
+            winLength = 3;
+        }
+
         ticTacToeTable.setHgap(5);
         ticTacToeTable.setVgap(5);
+
+        double buttonSize = 500.0 / size;
+        double fontSize = switch (size) {
+            case 3 -> 36;
+            case 5 -> 30;
+            case 7 -> 26;
+            case 10 -> 18;
+            default -> 24;
+        };
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 Button button = new Button();
-                button.setFont(new Font(24));
-                button.setMinSize(500.0 / size, 500.0 / size);
+                button.setMinSize(buttonSize, buttonSize);
+                button.setFont(new Font(fontSize));
+                button.setFocusTraversable(false);
+
                 int row = i, col = j;
                 button.setOnAction(e -> onUserMove(button, row, col));
                 ticTacToeTable.add(button, j, i);
@@ -101,28 +124,38 @@ public class GameController implements Initializable {
     }
 
     private boolean checkWin(int player) {
+        // Проверка всех направлений от каждой ячейки
+        int[][] directions = {
+                { 1, 0 }, // вниз
+                { 0, 1 }, // вправо
+                { 1, 1 }, // по диагонали ↘
+                { 1, -1 } // по диагонали ↙
+        };
+
         for (int i = 0; i < fieldSize; i++) {
-            boolean rowWin = true;
-            boolean colWin = true;
             for (int j = 0; j < fieldSize; j++) {
                 if (field[i][j] != player)
-                    rowWin = false;
-                if (field[j][i] != player)
-                    colWin = false;
+                    continue;
+
+                for (int[] dir : directions) {
+                    int count = 1;
+                    int dx = dir[0], dy = dir[1];
+
+                    int x = i + dx;
+                    int y = j + dy;
+
+                    while (x >= 0 && x < fieldSize && y >= 0 && y < fieldSize && field[x][y] == player) {
+                        count++;
+                        if (count >= winLength)
+                            return true;
+                        x += dx;
+                        y += dy;
+                    }
+                }
             }
-            if (rowWin || colWin)
-                return true;
         }
 
-        boolean mainDiag = true;
-        boolean antiDiag = true;
-        for (int i = 0; i < fieldSize; i++) {
-            if (field[i][i] != player)
-                mainDiag = false;
-            if (field[i][fieldSize - i - 1] != player)
-                antiDiag = false;
-        }
-        return mainDiag || antiDiag;
+        return false;
     }
 
     private void sendResult(String command) {
@@ -137,9 +170,29 @@ public class GameController implements Initializable {
 
     private void showResult(String title, int[] result) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText("X: " + result[0] + "\nO: " + result[1]);
+
+        String resultMessage = "";
+        if (result[0] == 1 && result[1] == 0) {
+            resultMessage = "Поздравляем! Вы выиграли!";
+        } else if (result[0] == 0 && result[1] == 1) {
+            resultMessage = "Вы проиграли. Попробуйте снова!";
+        } else if (result[0] == 0 && result[1] == 0) {
+            resultMessage = "Ничья! Хорошая попытка!";
+        }
+
+        alert.setContentText(resultMessage);
+
+        if (result[0] == 1 && result[1] == 0) {
+            alert.getDialogPane().setStyle("-fx-background-color: lightgreen; -fx-font-size: 16px;");
+        } else if (result[0] == 0 && result[1] == 1) {
+            alert.getDialogPane().setStyle("-fx-background-color: lightcoral; -fx-font-size: 16px;");
+        } else {
+            alert.getDialogPane().setStyle("-fx-background-color: lightyellow; -fx-font-size: 16px;");
+        }
+
         alert.showAndWait();
 
         Stage stage = (Stage) ticTacToeTable.getScene().getWindow();
@@ -245,3 +298,68 @@ public class GameController implements Initializable {
         return null;
     }
 }
+
+// private int[] findComputerMove() {
+// int bestScore = Integer.MIN_VALUE;
+// int[] bestMove = new int[] { -1, -1 };
+
+// for (int i = 0; i < fieldSize; i++) {
+// for (int j = 0; j < fieldSize; j++) {
+// if (field[i][j] == 0) {
+// field[i][j] = 2;
+// int score = minimax(0, false, Integer.MIN_VALUE, Integer.MAX_VALUE);
+// field[i][j] = 0;
+
+// if (score > bestScore) {
+// bestScore = score;
+// bestMove = new int[] { i, j };
+// }
+// }
+// }
+// }
+
+// return bestMove;
+// }
+
+// private int minimax(int depth, boolean isMaximizing, int alpha, int beta) {
+// if (checkWin(2))
+// return 10 - depth; // победа ИИ
+// if (checkWin(1))
+// return depth - 10; // победа игрока
+// if (isBoardFull())
+// return 0; // ничья
+
+// if (isMaximizing) {
+// int maxEval = Integer.MIN_VALUE;
+// for (int i = 0; i < fieldSize; i++) {
+// for (int j = 0; j < fieldSize; j++) {
+// if (field[i][j] == 0) {
+// field[i][j] = 2;
+// int eval = minimax(depth + 1, false, alpha, beta);
+// field[i][j] = 0;
+// maxEval = Math.max(maxEval, eval);
+// alpha = Math.max(alpha, eval);
+// if (beta <= alpha)
+// return maxEval;
+// }
+// }
+// }
+// return maxEval;
+// } else {
+// int minEval = Integer.MAX_VALUE;
+// for (int i = 0; i < fieldSize; i++) {
+// for (int j = 0; j < fieldSize; j++) {
+// if (field[i][j] == 0) {
+// field[i][j] = 1;
+// int eval = minimax(depth + 1, true, alpha, beta);
+// field[i][j] = 0;
+// minEval = Math.min(minEval, eval);
+// beta = Math.min(beta, eval);
+// if (beta <= alpha)
+// return minEval;
+// }
+// }
+// }
+// return minEval;
+// }
+// }

@@ -7,7 +7,8 @@ public record UserModel(
                 String name,
                 int playedGames,
                 int wonGames,
-                double ratio) implements Serializable {
+                double ratio,
+                int rating) implements Serializable {
 
         @Override
         public String toString() {
@@ -17,6 +18,7 @@ public record UserModel(
                                 ", playedGames=" + playedGames +
                                 ", wonGames=" + wonGames +
                                 ", ratio=" + ratio +
+                                ", rating=" + rating +
                                 ")";
         }
 }

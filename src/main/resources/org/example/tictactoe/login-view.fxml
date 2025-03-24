@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
 
-<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.tictactoe.auth.LoginController">
-    <TextField fx:id="usernameField" promptText="Логин"/>
-    <PasswordField fx:id="passwordField" promptText="Пароль"/>
-    <HBox spacing="10">
+<VBox spacing="20" alignment="CENTER" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.tictactoe.auth.LoginController"
+      prefWidth="600" prefHeight="450"
+      styleClass="login-container">
+
+    <!-- ЛОГОТИП -->
+    <ImageView fx:id="logoImage" fitWidth="120" preserveRatio="true">
+        <image>
+            <Image url="/images/logo.png"/>
+        </image>
+    </ImageView>
+
+    <!-- Заголовок -->
+    <Label text="Добро пожаловать в Крестики-нолики!" styleClass="login-title"/>
+
+    <!-- Поля ввода -->
+    <TextField fx:id="usernameField" promptText="Логин" styleClass="text-field"/>
+    <PasswordField fx:id="passwordField" promptText="Пароль" styleClass="password-field"/>
+
+    <!-- Кнопки -->
+    <HBox spacing="15" alignment="CENTER">
         <Button text="Войти" onAction="#onLogin"/>
         <Button text="Регистрация" onAction="#onRegister"/>
     </HBox>

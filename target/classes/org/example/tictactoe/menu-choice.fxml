@@ -2,11 +2,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
-<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.tictactoe.menu.MyMenuController">
-    <Button text="Играть 3x3" onAction="#onSizeThreeClick"/>
-    <Button text="Играть 5x5" onAction="#onSizeFiveClick"/>
-    <Button text="Играть 7x7" onAction="#onSizeSevenClick"/>
-    <Button text="Играть 10x10" onAction="#onSizeTenClick"/>
-    <Button text="Статистика" onAction="#onStatisticClick"/>
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.tictactoe.menu.MyMenuController" prefWidth="700" prefHeight="500" style="-fx-background-color: linear-gradient(to bottom right, #e0f7fa, #ffffff); -fx-padding: 30;">
+    <Label text="Выберите размер поля" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333333; -fx-margin-bottom: 20px;"/>
+    <Button text="Играть 3x3" onAction="#onSizeThreeClick" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0.3, 0, 2);"/>
+    <Button text="Играть 5x5" onAction="#onSizeFiveClick" style="-fx-background-color:rgb(60, 133, 194); -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0.3, 0, 2);"/>
+    <Button text="Играть 7x7" onAction="#onSizeSevenClick" style="-fx-background-color:rgb(116, 49, 192); -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0.3, 0, 2);"/>
+    <Button text="Играть 10x10" onAction="#onSizeTenClick" style="-fx-background-color:rgb(233, 10, 21); -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0.3, 0, 2);"/>
+    <Button text="Статистика" onAction="#onStatisticClick" style="-fx-background-color:rgb(233, 3, 202); -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 5; -fx-padding: 10 20; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0.3, 0, 2);"/>
     <StackPane fx:id="rootPane" prefHeight="0" prefWidth="0"/>
 </VBox>
