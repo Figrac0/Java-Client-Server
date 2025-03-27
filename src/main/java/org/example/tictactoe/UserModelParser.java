@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class UserModelParser {
-
+    // парсит JSON-список в список UserModel через GSON
     private static final Gson gson = new Gson();
 
     public static List<UserModel> parse(String json) {

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+//отправка и приём строк между клиентом и сервером.
 public class LoginController implements Initializable {
 
     @FXML
@@ -50,10 +51,14 @@ public class LoginController implements Initializable {
         }
 
         try {
+            // Отправку команд LOGIN login password и REGISTER login password по
+            // outputStream
+            // отправка и приём строк между клиентом и сервером.
             outputStream.writeUTF("LOGIN " + nickname + " " + password);
             outputStream.flush();
 
             String response = inputStream.readUTF();
+            // Получение ответа LOGIN_SUCCESS, REGISTER_SUCCESS и переход в главное меню
             if ("LOGIN_SUCCESS".equals(response)) {
                 ClientApplication.login = nickname;
                 openMenu();

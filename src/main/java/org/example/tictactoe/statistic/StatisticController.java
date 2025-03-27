@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+//Контроллер окна статистики
 public class StatisticController implements Initializable {
 
     @FXML
@@ -39,17 +40,19 @@ public class StatisticController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Отображает таблицу с колонками: Имя, Игр, Побед, % побед, Рейтинг
         nameColumn.setCellValueFactory(cell -> cell.getValue().name());
         playedColumn.setCellValueFactory(cell -> cell.getValue().playedGames().asObject());
         wonColumn.setCellValueFactory(cell -> cell.getValue().wonGames().asObject());
         ratioColumn.setCellValueFactory(cell -> cell.getValue().ratio());
         ratingColumn.setCellValueFactory(cell -> cell.getValue().rating().asObject());
 
-        try {
+        try {// Отправляет запрос GET_RATING login
             outputStream.writeUTF("GET_RATING " + ClientApplication.login);
             outputStream.flush();
-
+            // Получает JSON со списком игроков и их статистикой (из UserModel);
             String response = inputStream.readUTF();
+            // Работает с JSON через GSON и использует вспомогательный класс UserModelParser
             List<UserModel> list = UserModelParser.parse(response);
 
             for (UserModel user : list) {

@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
 public class GameController implements Initializable {
 
     @FXML
+    // Генерация поля заданного размера (через GridPane)
     private GridPane ticTacToeTable;
 
     private final DataOutputStream outputStream = ClientApplication.outputStream;
@@ -39,6 +40,7 @@ public class GameController implements Initializable {
         this.fieldSize = size;
         this.field = new int[size][size];
 
+        // Проверка победы (динамическая: 3/4/5 клеток в зависимости от поля);
         if (size == 3 || size == 5) {
             winLength = 3;
         } else if (size == 7) {
@@ -83,6 +85,8 @@ public class GameController implements Initializable {
         button.setDisable(true);
         field[row][col] = 1;
         currentTurn++;
+
+        // передача результата на сервер (ADD_VICTORY, ADD_DEFEAT) через сокет;
 
         if (checkWin(1)) {
             gameOver = true;
@@ -209,6 +213,8 @@ public class GameController implements Initializable {
         return true;
     }
 
+    // сначала выигрыш, затем блокировка, затем центр, углы, оценки позиций
+    // (evaluatePosition). Также реализована победа по длине линии
     private int[] findComputerMove() {
         // 1. Попытаться выиграть
         int[] win = findBestMoveFor(2);

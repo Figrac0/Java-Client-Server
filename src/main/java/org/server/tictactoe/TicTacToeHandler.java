@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
+//обрабатывать команды клиента через сокет и реализация взаимодействия с базой данных
 public class TicTacToeHandler implements Runnable {
 
     private final Gson gson = new Gson();
@@ -20,6 +21,7 @@ public class TicTacToeHandler implements Runnable {
 
     public TicTacToeHandler(Socket socket) throws IOException {
         this.clientSocket = socket;
+        // Создаются потоки ввода/вывода для общения с клиентом (по TCP-соединению)
         this.input = new DataInputStream(socket.getInputStream());
         this.output = new DataOutputStream(socket.getOutputStream());
         this.db = new TicTacToeDbImp();
@@ -29,11 +31,13 @@ public class TicTacToeHandler implements Runnable {
     public void run() {
         try {
             while (true) {
-                String request = input.readUTF();
+                String request = input.readUTF();// получаем команду клиента
                 String[] parts = request.split(" ");
                 String command = parts[0];
 
                 switch (command) {
+                    // Команды приходят в виде строки (LOGIN user pass, ADD_VICTORY user, и
+                    // т.д.)обрабатываются через switch
                     case "LOGIN" -> handleLogin(parts);
                     case "ADD_VICTORY" -> handleAddVictory(parts);
                     case "ADD_DEFEAT" -> handleAddDefeat(parts);
@@ -62,6 +66,7 @@ public class TicTacToeHandler implements Runnable {
         String password = parts[2];
 
         Response<Boolean> response = db.login(username, password);
+        // Ответ клиенту отправляется обратно
         output.writeUTF(response.getData() ? "LOGIN_SUCCESS" : "LOGIN_FAILURE");
         if (!response.getData())
             output.writeUTF(response.getDescription());

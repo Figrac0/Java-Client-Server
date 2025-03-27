@@ -9,10 +9,19 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+//Работает с SQLite через java.sql
 public class TicTacToeDbImp implements TicTacToe {
 
     private Connection conn;
     private Statement stmt;
+
+    // Клиент отправляет: LOGIN username password
+
+    // TicTacToeHandler читает строку, вызывает db.login(...)
+
+    // TicTacToeDbImp проверяет в БД, возвращает Response<Boolean>
+
+    // Результат передаётся обратно клиенту через output.writeUTF(...)
 
     public TicTacToeDbImp() {
         try {
@@ -64,6 +73,7 @@ public class TicTacToeDbImp implements TicTacToe {
     public Response<Boolean> register(String nickname, String password) {
         try {
             var res = stmt.executeUpdate(
+                    // При регистрации
                     "INSERT INTO users(nickname, password, rating) VALUES('" + nickname + "', '" + password
                             + "', 2000);");
 
@@ -77,6 +87,7 @@ public class TicTacToeDbImp implements TicTacToe {
     public Response<Boolean> login(String nickname, String password) {
         try {
             var rs = stmt.executeQuery(
+                    // При входе
                     "SELECT password FROM users WHERE nickname = '" + nickname + "'");
             if (rs.next()) {
                 boolean success = rs.getString("password").equals(password);
@@ -92,6 +103,7 @@ public class TicTacToeDbImp implements TicTacToe {
     @Override
     public Response<Boolean> addVictoryForUser(String nickname) {
         try {
+            // При победе/поражении: обновляет played_games, won_games, rating
             stmt.executeUpdate("""
                         UPDATE users
                         SET
@@ -125,6 +137,7 @@ public class TicTacToeDbImp implements TicTacToe {
     }
 
     @Override
+    // При запросе рейтинга: собирает всех пользователей в список UserModel
     public Response<List<UserModel>> getRatingWithCurrentUser(String nickname) {
         try {
             var rs = stmt.executeQuery("""

@@ -6,6 +6,7 @@ import org.server.tictactoe.models.UserModel;
 
 import java.io.Serializable;
 
+//адаптирует UserModel (сервера) для JavaFX таблицы
 public record UserModelUi(
         SimpleStringProperty name,
         SimpleIntegerProperty playedGames,

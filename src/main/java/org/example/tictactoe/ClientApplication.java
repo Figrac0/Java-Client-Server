@@ -10,6 +10,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
+//Сокеты создаются и используются в ClientApplication, LoginController, GameController, StatisticController.
+
+//Интерфейс: JavaFX с FXML (login-view, menu-choice, game-view, statistic-view);
+
+//Пользователь управляет игрой, данные отправляются на сервер;
+
+//Стиль в style.css, подключается в ClientApplication.
+
 public class ClientApplication extends Application {
 
     public static Socket socket;
@@ -21,19 +29,22 @@ public class ClientApplication extends Application {
     public void start(Stage stage) {
         try {
             socket = new Socket("localhost", 8080);
+            // Инициализация потоков
             outputStream = new DataOutputStream(socket.getOutputStream());
             inputStream = new DataInputStream(socket.getInputStream());
+            // Клиент подключается к серверу и далее отправляет команды (вход, регистрация,
+            // игра, статистика) по сокетам.
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/tictactoe/login-view.fxml"));
-            Scene scene = new Scene(loader.load(), 700, 500); // Размер окна
+            Scene scene = new Scene(loader.load(), 700, 500);
 
-            // Подключение CSS
             scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
 
             stage.setTitle("Крестики-нолики — Вход в игру");
             stage.setResizable(false);
             stage.setScene(scene);
 
+            // Загрузка первого окна (login-view.fxml) и передача потоков в контроллер
             LoginController controller = loader.getController();
             controller.setStreams(outputStream, inputStream);
 

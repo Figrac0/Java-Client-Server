@@ -9,6 +9,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.tictactoe.game.GameController;
 
+//Контроллер главного меню
 public class MyMenuController {
 
     @FXML
@@ -20,6 +21,7 @@ public class MyMenuController {
         this.mainStage = stage;
     }
 
+    // выбор размера поля (3×3, 5×5, 7×7, 10×10)
     @FXML
     protected void onSizeThreeClick() {
         openGameFieldWithSize(3);
@@ -43,6 +45,7 @@ public class MyMenuController {
     @FXML
     protected void onStatisticClick() {
         try {
+            // Открываем окно статистики statistic-view.fxml
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/tictactoe/statistic-view.fxml"));
             Parent root = loader.load();
 
@@ -63,6 +66,8 @@ public class MyMenuController {
 
     private void openGameFieldWithSize(int size) {
         try {
+            // Загружаем game-view.fxml и передаём туда размер поля
+            // (controller.setCategory(size);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/tictactoe/game-view.fxml"));
             Parent root = loader.load();
 
